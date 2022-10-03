@@ -1,0 +1,55 @@
+pipeline
+{
+    agent any
+    
+    stages{
+        
+        stage('Build user Name')
+        {
+            steps{
+                wrap([$class:'BuildUser'])
+                {
+                    script{
+                        echo "${BUILD_USER}"
+                        
+                        def user = "${BUILD_USER}"
+                        
+                        if(user == 'Sumit')
+                        {
+                            echo "Build user name is sumit"
+                        }
+                        else{
+                            echo "Build user is NOT summit"
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage("Get user Input")
+        {
+              input{
+                        message "Is Sonar report is Okay, Shall we proceed to next stage?"
+                        submitter "Sumit"
+                        parameters {
+                            string(name:'userInput', description: 'user Input data')
+                        }
+                    }
+            steps{
+              script{
+                  bat "dir"
+                    echo "user Input ${userInput}"
+              }
+            }
+        }
+           stage("After user Input")
+        {
+            steps{
+                script{
+                    bat 'hostname'
+                    //echo "user Input ${userInput}"
+                }
+            }
+        }
+    }
+}
